@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <iterator>
+#include <cstdlib>
 
 using namespace std;
 
@@ -157,6 +158,22 @@ void CreateNewAccount()
 
   ShowPasswordMenu(fName, lName);
 }
+
+void login(string uName, string passWord)
+  {
+      
+    cout << "Log into your Account...."
+    cout << "Username: " << uName << endl;
+    cout << "Password: " << passWord << endl;
+    cin >> uName;
+    cin >> passWord;
+    
+    
+    
+    // Login user account
+      // Takes uName & passWord
+      // Logs in user
+  };
 
 int main()
 {
