@@ -81,9 +81,31 @@ string BuildUserName(string fName, string lName)       // WORKS!
 bool ValidatePassword(string pWord)                      // Works!
 {
   bool result, HasWhiteSpace(string), MeetsPasswordLength(string);
+  string ShowPasswordMenu();
+
   if ((MeetsPasswordLength(pWord) == true) && (HasWhiteSpace(pWord) == false))
   {
     result = true;
+  }
+  else if(MeetsPasswordLength(pWord) == false)
+  {
+    // Prompt for new Password
+    cout << "\nCreate a Password that is: " << endl;
+    cout << "\t - At least 10 characters long " << endl;
+    cout << "\t - Contains no whitespace " << endl;
+    cout << "Password: ";
+    cin >> pWord;
+    ValidatePassword(pWord);
+  }
+  else if(HasWhiteSpace(pWord) == true)
+  {
+    // Prompt for new Password
+    cout << "\nCreate a Password that is: " << endl;
+    cout << "\t - At least 10 characters long " << endl;
+    cout << "\t - Contains no whitespace " << endl;
+    cout << "Password: ";
+    cin >> pWord;
+    ValidatePassword(pWord);
   }
   else
   {
@@ -134,11 +156,12 @@ void CreateAccountMenu()
   // void CreateAccount(string, string, string)
   string ShowAccountDetails(string, string);
   string BuildUserName(string, string);
-  string ShowPasswordMenu();
+  string ShowPasswordMenu(string, string);
   string EncryptPassword(string);
   string fileName = "creds.txt", fName, lName, uName, pWord;
+  void CreateNewAccount(string, string, string);
   bool AccountExists(string);
-  ofstream acctFile;
+
 
   cout << "Creating new account...\n\n";
   cout << "First Name: \t";
@@ -149,7 +172,7 @@ void CreateAccountMenu()
   cout << endl;
 
   uName = BuildUserName(fName, lName);
-  ShowPasswordMenu();
+  ShowPasswordMenu(fName, lName);
   cin >> pWord;
 
   if(AccountExists(uName) == true)
@@ -160,25 +183,44 @@ void CreateAccountMenu()
   {
     if(ValidatePassword(pWord) == true)
     {
-      acctFile.open(fileName.c_str(), fstream::app);
-      acctFile << BuildUserName(fName, lName) + ":" + EncryptPassword(pWord) << "\n";
-      acctFile.close();
-      ShowAccountDetails(fName, lName);
+      CreateNewAccount(fName, lName, pWord);
     }
     else
     {
-      ShowPasswordMenu();
+      ShowPasswordMenu(fName, lName);
     }
   }
 }
 
-string ShowPasswordMenu()
+void CreateNewAccount(string fName, string lName, string pWord)
 {
+  string BuildUserName(string, string);
+  string fileName = "creds.txt";
+  void ShowAccountDetails(string, string);
+  ofstream acctFile;
+  acctFile.open(fileName.c_str(), fstream::app);
+  acctFile << BuildUserName(fName, lName) + ":" + EncryptPassword(pWord) << "\n";
+  acctFile.close();
+  ShowAccountDetails(fName, lName);
+}
+
+string ShowPasswordMenu(string fName, string lName)
+{
+  void CreateNewAccount(string, string, string);
   string pWord;
-  cout << "Create a Password that is: " << endl;
-  cout << "\t - At least 10 characters long " << endl;
-  cout << "\t - Contains no whitespace " << endl;
-  cout << "Password: ";
+  // cout << "\nCreate a Password that is: " << endl;
+  // cout << "\t - At least 10 characters long " << endl;
+  // cout << "\t - Contains no whitespace " << endl;
+  // cout << "Password: ";
+
+  if(ValidatePassword(pWord) == false)
+  {
+    ShowPasswordMenu(fName, lName);
+  }
+  else
+  {
+    CreateNewAccount(fName, lName, EncryptPassword(pWord));
+  }
   return pWord;
 }
 
@@ -242,6 +284,7 @@ int main()
       break;
 
       case 2:
+      // Create a new user account
       CreateAccountMenu();
       break;
 
