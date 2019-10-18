@@ -35,7 +35,37 @@ bool AccountExists(string uName)
     acctFile.close();
   }
   return result;
-};
+}
+
+bool PasswordExists(string pWord)
+{
+  bool result;
+  ifstream acctFile;
+  string line;
+
+  acctFile.open("creds.txt");
+  if (acctFile)
+  {
+    while (getline(acctFile, line))
+    {
+      stringstream ss(line);
+      while(getline(ss, line, ':'))
+      {
+        if (line == pWord)
+        {
+          result = true;
+          return result;
+        }
+        else
+        {
+          result = false;
+        }
+      }
+    }
+    acctFile.close();
+  }
+  return result;
+}
 
 string BuildUserName(string fName, string lName)       // WORKS!
 {
@@ -46,7 +76,7 @@ string BuildUserName(string fName, string lName)       // WORKS!
     uName.at(i) = tolower(uName.at(i));
   }
   return uName;
-};
+}
 
 bool ValidatePassword(string pWord)                      // Works!
 {
@@ -97,12 +127,16 @@ string EncryptPassword(string pWord)                    // WORKS!
     }
   }
   return pWord;
-};
+}
 
 void CreateAccountMenu()
 {
-  void CreateAccount(string, string, string), ShowAccountDetails(string, string);
-  string BuildUserName(string, string), ShowPasswordMenu(), EncryptPassword(string), fileName = "creds.txt", fName, lName, uName, pWord;
+  // void CreateAccount(string, string, string)
+  string ShowAccountDetails(string, string);
+  string BuildUserName(string, string);
+  string ShowPasswordMenu();
+  string EncryptPassword(string);
+  string fileName = "creds.txt", fName, lName, uName, pWord;
   bool AccountExists(string);
   ofstream acctFile;
 
@@ -121,7 +155,6 @@ void CreateAccountMenu()
   if(AccountExists(uName) == true)
   {
     cout << "Account exists!";
-
   }
   else
   {
@@ -161,11 +194,28 @@ void ShowAccountDetails(string fName, string lName)
   cout << endl;
 }
 
-void Login(string uName, string passWord)
+void Login()
 {
   // Login user account
-  // Takes uName & passWord
-  // Logs in user
+  bool AccountExists(string);
+  bool PasswordExists(string);
+  string uName, pWord;
+  cout <<"Login To Your Account..... " << endl;
+  cout << "\tUsername: ";
+  cin >> uName;
+
+  cout << "\tPassword: ";
+  cin >> pWord;
+
+  if(AccountExists(uName) && PasswordExists(EncryptPassword(pWord)))
+  {
+    cout << "\n***Access Granted***" << endl;
+    cout << "Welcome, " << uName << "!" << endl;
+  }
+  else
+  {
+    cout << "\n***Access Denied***" << endl;
+  }
 };
 
 int main()
@@ -188,6 +238,7 @@ int main()
     {
       case 1:
       // Login to an existing account
+      Login();
       break;
 
       case 2:
