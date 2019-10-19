@@ -37,11 +37,11 @@ bool AccountExists(string uName)
   return result;
 }
 
-bool PasswordExists(string pWord)
+bool CheckCredentials(string uName, string pWord)
 {
   bool result;
   ifstream acctFile;
-  string line;
+  string line, userCreds = uName + ":" + pWord;
 
   acctFile.open("creds.txt");
   if (acctFile)
@@ -49,9 +49,9 @@ bool PasswordExists(string pWord)
     while (getline(acctFile, line))
     {
       stringstream ss(line);
-      while(getline(ss, line, ':'))
+      while(getline(ss, line))
       {
-        if (line == pWord)
+        if (line == userCreds)
         {
           result = true;
           return result;
@@ -240,8 +240,7 @@ void ShowAccountDetails(string fName, string lName)
 void Login()
 {
   // Login user account
-  bool AccountExists(string);
-  bool PasswordExists(string);
+  bool CheckCredentials(string, string);
   string uName, pWord;
   cout <<"Login To Your Account..... " << endl;
   cout << "\tUsername: ";
@@ -250,7 +249,7 @@ void Login()
   cout << "\tPassword: ";
   cin >> pWord;
 
-  if(AccountExists(uName) && PasswordExists(EncryptPassword(pWord)))
+  if(CheckCredentials(uName, EncryptPassword(pWord)) == true)
   {
     cout << "\n***Access Granted***" << endl;
     cout << "Welcome, " << uName << "!" << endl;
