@@ -290,7 +290,8 @@ int main()
 
       case 3:
       // Exit
-      return 0;
+      // return 0;
+      cout << "***Exiting Program...... Goodbye.\n" << endl;
       break;
 
       default:
