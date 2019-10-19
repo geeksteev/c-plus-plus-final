@@ -153,14 +153,13 @@ string EncryptPassword(string pWord)                    // WORKS!
 
 void CreateAccountMenu()
 {
-  // void CreateAccount(string, string, string)
   string ShowAccountDetails(string, string);
   string BuildUserName(string, string);
-  string ShowPasswordMenu(string, string);
+  void ShowPasswordMenu();
   string EncryptPassword(string);
-  string fileName = "creds.txt", fName, lName, uName, pWord;
   void CreateNewAccount(string, string, string);
   bool AccountExists(string);
+  string fileName = "creds.txt", fName, lName, pWord;
 
 
   cout << "Creating new account...\n\n";
@@ -171,11 +170,13 @@ void CreateAccountMenu()
   cin >> lName;
   cout << endl;
 
-  uName = BuildUserName(fName, lName);
-  ShowPasswordMenu(fName, lName);
+  cout << "\nCreate a Password that is: " << endl;
+  cout << "\t - At least 10 characters long " << endl;
+  cout << "\t - Contains no whitespace " << endl;
+  cout << "Password: ";
   cin >> pWord;
 
-  if(AccountExists(uName) == true)
+  if(AccountExists(BuildUserName(fName, lName)) == true)
   {
     cout << "Account exists!";
   }
@@ -187,7 +188,7 @@ void CreateAccountMenu()
     }
     else
     {
-      ShowPasswordMenu(fName, lName);
+      ShowPasswordMenu();
     }
   }
 }
@@ -204,24 +205,24 @@ void CreateNewAccount(string fName, string lName, string pWord)
   ShowAccountDetails(fName, lName);
 }
 
-string ShowPasswordMenu(string fName, string lName)
+void ShowPasswordMenu()
 {
-  void CreateNewAccount(string, string, string);
-  string pWord;
-  // cout << "\nCreate a Password that is: " << endl;
-  // cout << "\t - At least 10 characters long " << endl;
-  // cout << "\t - Contains no whitespace " << endl;
-  // cout << "Password: ";
+  // void CreateNewAccount(string, string, string);
+  // string pWord;
+  cout << "\nCreate a Password that is: " << endl;
+  cout << "\t - At least 10 characters long " << endl;
+  cout << "\t - Contains no whitespace " << endl;
+  cout << "Password: ";
 
-  if(ValidatePassword(pWord) == false)
-  {
-    ShowPasswordMenu(fName, lName);
-  }
-  else
-  {
-    CreateNewAccount(fName, lName, EncryptPassword(pWord));
-  }
-  return pWord;
+  // if(ValidatePassword(pWord) == false)
+  // {
+  //   ShowPasswordMenu(fName, lName);
+  // }
+  // else
+  // {
+  //   CreateNewAccount(fName, lName, EncryptPassword(pWord));
+  // }
+  // return pWord;
 }
 
 void ShowAccountDetails(string fName, string lName)
