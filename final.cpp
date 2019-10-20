@@ -36,31 +36,31 @@ bool AccountExists(string uName)
 
 bool CheckCredentials(string uName, string pWord)
 { // Read file for string match of username + ":" + password
-  bool result;
-  ifstream acctFile;
-  string line, userCreds = uName + ":" + pWord;
-  acctFile.open("creds.txt");
-  if (acctFile)
+bool result;
+ifstream acctFile;
+string line, userCreds = uName + ":" + pWord;
+acctFile.open("creds.txt");
+if (acctFile)
+{
+  while (getline(acctFile, line))
   {
-    while (getline(acctFile, line))
+    stringstream ss(line);
+    while(getline(ss, line))
     {
-      stringstream ss(line);
-      while(getline(ss, line))
+      if (line == userCreds)
       {
-        if (line == userCreds)
-        {
-          result = true;
-          return result;
-        }
-        else
-        {
-          result = false;
-        }
+        result = true;
+        return result;
+      }
+      else
+      {
+        result = false;
       }
     }
-    acctFile.close();
   }
-  return result;
+  acctFile.close();
+}
+return result;
 }
 
 string BuildUserName(string fName, string lName)
@@ -72,42 +72,6 @@ string BuildUserName(string fName, string lName)
     uName.at(i) = tolower(uName.at(i));
   }
   return uName;
-}
-
-bool ValidatePassword(string pWord)
-{ // Validate the password meets length and no whitespace requirements
-  bool result, HasWhiteSpace(string);
-  bool MeetsPasswordLength(string);
-  string ShowPasswordMenu();
-  if ((MeetsPasswordLength(pWord) == true) && (HasWhiteSpace(pWord) == false))
-  {
-    result = true;
-  }
-  else if(MeetsPasswordLength(pWord) == false)
-  {
-    // Prompt for new Password
-    cout << "\nCreate a Password that is: " << endl;
-    cout << "\t - At least 10 characters long " << endl;
-    cout << "\t - Contains no whitespace " << endl;
-    cout << "Password: ";
-    cin >> pWord;
-    ValidatePassword(pWord);
-  }
-  else if(HasWhiteSpace(pWord) == true)
-  {
-    // Prompt for new Password
-    cout << "\nCreate a Password that is: " << endl;
-    cout << "\t - At least 10 characters long " << endl;
-    cout << "\t - Contains no whitespace " << endl;
-    cout << "Password: ";
-    cin >> pWord;
-    ValidatePassword(pWord);
-  }
-  else
-  {
-    result = false;
-  }
-  return result;
 }
 
 bool HasWhiteSpace(string pWord)
@@ -123,12 +87,59 @@ for (int i = 0; i < pWord.length(); i++)
 return result;
 }
 
-bool MeetsPasswordLength(string pWord)
+bool MinPasswordLength(string pWord)
 { // Checks the length of the password. Meets requirements results in 'true' or '1'
   bool result = false;
   if (pWord.length() >= 10)
   {
     result = true;
+  }
+  return result;
+}
+
+void GetPasswordFromUser(string fName, string lName)
+{
+  string strPWord;
+  bool isValidated;
+  bool PasswordIsGood(string);
+  void CreateNewAccount(string, string, string);
+  cout << "\nCreate a Password that is: " << endl;
+  cout << "\t - At least 10 characters long " << endl;
+  cout << "\t - Contains no whitespace " << endl;
+  cout << "Password: ";
+  // cout << endl;
+  cin.ignore();
+  getline(cin, strPWord);
+
+  if(PasswordIsGood(strPWord) == true)
+  {
+    // Create account
+    cout << "Creating account..." << endl;
+    CreateNewAccount(fName, lName, strPWord);
+  }
+  else
+  {
+    cout << "Bad password" << endl;
+    GetPasswordFromUser(fName, lName);
+  }
+}
+
+bool PasswordIsGood(string pWord)
+{
+  bool result;
+  bool MinPasswordLength(string);
+  bool HasWhiteSpace(string);
+
+  cout << "Min length: " << MinPasswordLength(pWord) << endl;
+  cout << "Has white space: " << HasWhiteSpace(pWord) << endl;
+
+  if(MinPasswordLength(pWord) && HasWhiteSpace(pWord) == false)
+  {
+    result = true;
+  }
+  else
+  {
+    result = false;
   }
   return result;
 }
@@ -149,77 +160,28 @@ string EncryptPassword(string pWord)
 
 void CreateAccountMenu()
 { // Displays the account creation menu
-  string ShowAccountDetails(string, string);
-  string BuildUserName(string, string);
-  void ShowPasswordMenu();
-  string EncryptPassword(string);
-  void CreateNewAccount(string, string, string);
-  bool AccountExists(string);
+  void GetPasswordFromUser(string, string);
   string fileName = "creds.txt", fName, lName, pWord;
-
-
   cout << "Creating new account...\n\n";
   cout << "First Name: \t";
   cin >> fName;
 
   cout << "Last Name: \t";
   cin >> lName;
-  cout << endl;
 
-  cout << "\nCreate a Password that is: " << endl;
-  cout << "\t - At least 10 characters long " << endl;
-  cout << "\t - Contains no whitespace " << endl;
-  cout << "Password: ";
-  cin >> pWord;
-
-  if(AccountExists(BuildUserName(fName, lName)) == true)
-  {
-    cout << "Account exists!";
-  }
-  else
-  {
-    if(ValidatePassword(pWord) == true)
-    {
-      CreateNewAccount(fName, lName, pWord);
-    }
-    else
-    {
-      ShowPasswordMenu();
-    }
-  }
+  GetPasswordFromUser(fName, lName);
 }
 
 void CreateNewAccount(string fName, string lName, string pWord)
 { // Creates the account in the "DB"
-  string BuildUserName(string, string);
-  string fileName = "creds.txt";
-  void ShowAccountDetails(string, string);
-  ofstream acctFile;
-  acctFile.open(fileName.c_str(), fstream::app);
-  acctFile << BuildUserName(fName, lName) + ":" + EncryptPassword(pWord) << "\n";
-  acctFile.close();
-  ShowAccountDetails(fName, lName);
-}
-
-void ShowPasswordMenu()
-{ // Displays the password menu
-
-  // void CreateNewAccount(string, string, string);
-  // string pWord;
-  cout << "\nCreate a Password that is: " << endl;
-  cout << "\t - At least 10 characters long " << endl;
-  cout << "\t - Contains no whitespace " << endl;
-  cout << "Password: ";
-
-  // if(ValidatePassword(pWord) == false)
-  // {
-  //   ShowPasswordMenu(fName, lName);
-  // }
-  // else
-  // {
-  //   CreateNewAccount(fName, lName, EncryptPassword(pWord));
-  // }
-  // return pWord;
+string BuildUserName(string, string);
+string fileName = "creds.txt";
+void ShowAccountDetails(string, string);
+ofstream acctFile;
+acctFile.open(fileName.c_str(), fstream::app);
+acctFile << BuildUserName(fName, lName) + ":" + EncryptPassword(pWord) << "\n";
+acctFile.close();
+ShowAccountDetails(fName, lName);
 }
 
 void ShowAccountDetails(string fName, string lName)
@@ -262,7 +224,7 @@ int main()
   void Login();
   int menuOption;
 
-  do
+  while(menuOption != 3)
   {
     cout << "\nPlease choose one of the following options: \n\n";
     cout << "\tEnter '1' to login to an existing account" << endl;
@@ -294,5 +256,5 @@ int main()
       default:
       cout << "Invalid Option.\n\n";
     }
-  } while (menuOption != 3);
+  }
 }
