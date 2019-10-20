@@ -98,7 +98,7 @@ bool MinPasswordLength(string pWord)
 }
 
 void GetPasswordFromUser(string fName, string lName)
-{
+{ // Prompts user for password and validates the password
   string strPWord;
   bool isValidated;
   bool PasswordIsGood(string);
@@ -120,12 +120,12 @@ void GetPasswordFromUser(string fName, string lName)
   else
   {
     cout << "Bad password" << endl;
-    GetPasswordFromUser(fName, lName);
+    GetPasswordFromUser(fName, lName  );
   }
 }
 
 bool PasswordIsGood(string pWord)
-{
+{ // Validates the password meets the requirements
   bool result;
   bool MinPasswordLength(string);
   bool HasWhiteSpace(string);
@@ -165,10 +165,8 @@ void CreateAccountMenu()
   cout << "Creating new account...\n\n";
   cout << "First Name: \t";
   cin >> fName;
-
   cout << "Last Name: \t";
   cin >> lName;
-
   GetPasswordFromUser(fName, lName);
 }
 
