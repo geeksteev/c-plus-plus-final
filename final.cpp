@@ -5,11 +5,12 @@
 
 using namespace std;
 
-bool AccountExists(string uName)
+bool AccountExists(string uName, string pWord)
 { // Read file for username
   bool result;
   ifstream acctFile;
-  string line;
+  string userLine, line;
+  userLine = uName + ":" + pWord;
   acctFile.open("creds.txt");
   if (acctFile)
   {
@@ -18,7 +19,7 @@ bool AccountExists(string uName)
       stringstream ss(line);
       while(getline(ss, line, ':'))
       {
-        if (line == uName)
+        if (line == userLine)
         {
           result = true;
           return result;
@@ -36,31 +37,31 @@ bool AccountExists(string uName)
 
 bool CheckCredentials(string uName, string pWord)
 { // Read file for string match of username + ":" + password
-bool result;
-ifstream acctFile;
-string line, userCreds = uName + ":" + pWord;
-acctFile.open("creds.txt");
-if (acctFile)
-{
-  while (getline(acctFile, line))
+  bool result;
+  ifstream acctFile;
+  string line, userCreds = uName + ":" + pWord;
+  acctFile.open("creds.txt");
+  if (acctFile)
   {
-    stringstream ss(line);
-    while(getline(ss, line))
+    while (getline(acctFile, line))
     {
-      if (line == userCreds)
+      stringstream ss(line);
+      while(getline(ss, line))
       {
-        result = true;
-        return result;
-      }
-      else
-      {
-        result = false;
+        if (line == userCreds)
+        {
+          result = true;
+          return result;
+        }
+        else
+        {
+          result = false;
+        }
       }
     }
+    acctFile.close();
   }
-  acctFile.close();
-}
-return result;
+  return result;
 }
 
 string BuildUserName(string fName, string lName)
@@ -76,15 +77,15 @@ string BuildUserName(string fName, string lName)
 
 bool HasWhiteSpace(string pWord)
 { // Checks password for whitespace. Meets requirements results in 'false' or '0'
-bool result = false;
-for (int i = 0; i < pWord.length(); i++)
-{
-  if (pWord[i] == ' ')
+  bool result = false;
+  for (int i = 0; i < pWord.length(); i++)
   {
-    result = true;
+    if (pWord[i] == ' ')
+    {
+      result = true;
+    }
   }
-}
-return result;
+  return result;
 }
 
 bool MinPasswordLength(string pWord)
@@ -163,7 +164,15 @@ void CreateAccountMenu()
   cin >> fName;
   cout << "Last Name: \t";
   cin >> lName;
-  GetPasswordFromUser(fName, lName);
+
+  if(AccountExists(BuildUserName(fName, lName), pWord))
+  {
+    cout << "Account Already Exists!" << endl;
+  }
+  else
+  {
+    GetPasswordFromUser(fName, lName);
+  }
 }
 
 void CreateNewAccount(string fName, string lName, string pWord)
