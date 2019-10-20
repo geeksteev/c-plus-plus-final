@@ -119,7 +119,6 @@ void GetPasswordFromUser(string fName, string lName)
   }
   else
   {
-    cout << "Bad password" << endl;
     GetPasswordFromUser(fName, lName  );
   }
 }
@@ -129,9 +128,6 @@ bool PasswordIsGood(string pWord)
   bool result;
   bool MinPasswordLength(string);
   bool HasWhiteSpace(string);
-
-  cout << "Min length: " << MinPasswordLength(pWord) << endl;
-  cout << "Has white space: " << HasWhiteSpace(pWord) << endl;
 
   if(MinPasswordLength(pWord) && HasWhiteSpace(pWord) == false)
   {
